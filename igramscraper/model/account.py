@@ -33,6 +33,7 @@ class Account(InitializerModel):
         self.business_email = None
         self.business_phone_number = None
         self.business_address_json = None
+        self.category_name = None
         self.requested_by_viewer = False
         self.connected_fb_page = None
 
@@ -50,7 +51,6 @@ class Account(InitializerModel):
 
     def __str__(self):
         string = f"""
-        Account info:
         Id: {self.identifier}
         Username: {self.username if hasattr(self, 'username') else '-'}
         Full Name: {self.full_name if hasattr(self, 'full_name') else '-'}
@@ -62,6 +62,8 @@ class Account(InitializerModel):
         Number of follows: {self.follows_count if hasattr(self, 'follows_count') else '-'}
         Is private: {self.is_private if hasattr(self, 'is_private') else '-'}
         Is verified: {self.is_verified if hasattr(self, 'is_verified') else '-'}
+        Category: {self.category_name}
+        Business Category: {self.business_category_name}
         """
         return textwrap.dedent(string)
 
@@ -89,6 +91,7 @@ class Account(InitializerModel):
             'external_url',
             'is_private',
             'is_verified',
+            'media_count',
             'blocked_by_viewer',
             'country_block',
             'followed_by_viewer',
@@ -103,6 +106,7 @@ class Account(InitializerModel):
             'business_email',
             'business_phone_number',
             'business_address_json',
+            'category_name',
             'requested_by_viewer',
             'connected_fb_page'
         ]
