@@ -9,7 +9,7 @@ idna==2.10
 lxml==4.6.2
 parse==1.18.0
 pyee==7.0.4
-pyppeteer==0.2.3
+pyppeteer==0.2.5
 pyquery==1.4.3
 python-slugify==3.0.2
 requests==2.25.1
