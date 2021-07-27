@@ -38,6 +38,7 @@ class Instagram:
     instance_cache = None
 
     def __init__(self, sleep_between_requests=0):
+        # self.__req = requests.session()
         self.__req = HTMLSession()
         self.paging_time_limit_sec = Instagram.PAGING_TIME_LIMIT_SEC
         self.paging_delay_minimum_microsec = Instagram.PAGING_DELAY_MINIMUM_MICROSEC
@@ -49,7 +50,7 @@ class Instagram:
         self.user_session = None
         self.rhx_gis = None
         self.sleep_between_requests = sleep_between_requests
-        self.user_agent = 'Instagram 126.0.0.25.121 Android (23/6.0.1; 320dpi; 720x1280; samsung; SM-A310F; a3xelte; samsungexynos7580; en_GB; 110937453)'
+        self.user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 160.1.0.31.120 (iPhone8,1; iOS 13_5_1; en_US; en-US; scale=2.00; 750x1334; 246979827) NW/1'
 
     def set_cookies(self,cookie):
         cj = http.cookiejar.MozillaCookieJar(cookie)
@@ -57,7 +58,7 @@ class Instagram:
         cookie = requests.utils.dict_from_cookiejar(cj)
         self.cookie=cookie
         self.user_session = cookie
-
+        
     def with_credentials(self, username, password, session_folder=None):
         """
         param string username
@@ -206,7 +207,8 @@ class Instagram:
     def __get_mid(self):
         """manually fetches the machine id from graphQL"""
         time.sleep(self.sleep_between_requests)
-        response = self.__req.get('https://www.instagram.com/web/__mid/')
+        response = self.__req.get('https://www.instagram.com/web/__mid/', headers=self.generate_headers(
+             self.user_session))
 
         if response.status_code != Instagram.HTTP_OK:
             raise InstagramException.default(response.text,
@@ -1427,8 +1429,6 @@ class Instagram:
 
         time.sleep(self.sleep_between_requests)
         response = self.__req.get(endpoints.BASE_URL, headers=headers)
-        test=response.status_code
-        test2=Instagram.HTTP_OK
 
         if not response.status_code == Instagram.HTTP_OK:
             return False
@@ -1458,7 +1458,7 @@ class Instagram:
 
         if force or not self.is_logged_in(session):
             time.sleep(self.sleep_between_requests)
-            response = self.__req.get(endpoints.BASE_URL)
+            response = self.__req.get(endpoints.BASE_URL, headers=self.generate_headers(self.user_session))
             if not response.status_code == Instagram.HTTP_OK:
                 raise InstagramException.default(response.text,
                                                  response.status_code)
